@@ -38,6 +38,12 @@ class Player {
     }
 }
 
+class Platform {
+    constructor() {
+        
+    }
+}
+
 const player = new Player()
 const keys = {
     right: {
@@ -56,6 +62,8 @@ function animate() {
 
     if (keys.right.pressed) {
         player.velocity.x = 5
+    } else if (keys.left.pressed) {
+        player.velocity.x = -5
     } else {
         player.velocity.x = 0
     }
