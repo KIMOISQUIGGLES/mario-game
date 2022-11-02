@@ -52,11 +52,11 @@ class Player {
 
 class Platform {
     // INFORMATION FOR PLATFORM
-    constructor() {
+    constructor({ x, y }) {
         // SET POSITION OF PLATFORM
         this.position = {
-            x: 200, 
-            y: 100
+            x, 
+            y
         }
 
         // SET DIMENSIONS OF PLATFORM
@@ -77,8 +77,12 @@ class Platform {
 const player = new Player()
 
 // DECLARE PLATFORM
-const platforms = [new Platform()]
+const platforms = [
+    new Platform( { x: 200, y: 100 } ), 
+    new Platform( { x: 500, y: 200 } )
+]
 
+let scrollOffset = 0
 
 const keys = {
 
@@ -116,15 +120,19 @@ function animate() {
 
         // REPOSITIONS PLATFORMS WHEN BG SCROLLS
         if (keys.right.pressed) {
+            scrollOffset +=5
             platforms.forEach(platform => {
                 platform.position.x -= 5
             })
         } else if (keys.left.pressed) {
+            scrollOffset -=5
             platforms.forEach(platform => {
                 platform.position.x += 5
             })
         }
     }
+
+    console.log(scrollOffset)
 
     // PLATFORM COLLISION DETECTION
     platforms.forEach(platform => {
