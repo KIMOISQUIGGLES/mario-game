@@ -77,7 +77,7 @@ class Platform {
 const player = new Player()
 
 // DECLARE PLATFORM
-const platform = new Platform
+const platforms = [new Platform()]
 
 
 const keys = {
@@ -95,30 +95,49 @@ function animate() {
     requestAnimationFrame(animate)
     c.clearRect(0, 0, canvas.width, canvas.height)
     player.update()
-    platform.draw()
+    platforms.forEach(platform => {
+        platform.draw()
+    })
 
     // ANIMATES MOVEMENT WHEN PRESSING LEFT AND RIGHT
-    if (keys.right.pressed) {
+    if (keys.right.pressed
+        // BEGINS TO SCROLL BACKGROUND WHEN PASSING CERTAIN POSITION ON SCREEN
+        && player.position.x < 400) {
         // WHEN RIGHT KEY IS PRESSED, MOVE RIGHT
         player.velocity.x = 5
-    } else if (keys.left.pressed) {
+    } else if (keys.left.pressed
+        // SCROLLS BG WHEN PASSING LEFT THRESHOLD ON SCREEN
+        && player.position.x >100) {
         // WHEN LEFT KEY IS PRESSED, MOVE LEFT
         player.velocity.x = -5
     } else {
         // MAKES PLAYER STOP MOVING WHEN NEIGHT LEFT NOR RIGHT KEY IS PRESSED
         player.velocity.x = 0
+
+        // REPOSITIONS PLATFORMS WHEN BG SCROLLS
+        if (keys.right.pressed) {
+            platforms.forEach(platform => {
+                platform.position.x -= 5
+            })
+        } else if (keys.left.pressed) {
+            platforms.forEach(platform => {
+                platform.position.x += 5
+            })
+        }
     }
 
     // PLATFORM COLLISION DETECTION
-    if(player.position.y + player.height <= platform.position.y 
-        && 
-        player.position.y + player.height + player.velocity.y >= platform.position.y 
-        && 
-        player.position.x + player.width >= platform.position.x 
-        && 
-        player.position.x <= platform.position.x + platform.width) {
-        player.velocity.y = 0
-    }
+    platforms.forEach(platform => {
+        if(player.position.y + player.height <= platform.position.y 
+            && 
+            player.position.y + player.height + player.velocity.y >= platform.position.y 
+            && 
+            player.position.x + player.width >= platform.position.x 
+            && 
+            player.position.x <= platform.position.x + platform.width) {
+            player.velocity.y = 0
+        }
+    })
 }
 
 animate()
